@@ -61,7 +61,7 @@ exports.handler = async (event, context) => {
   // pixlet binary
   let command = `${CWD}pixlet/pixlet-aws`
   if (process.env.CI) {
-    command = `${CWD}pixlet/pixlet-darwin`
+    command = `${CWD}pixlet/pixlet-linux`
   } else if (event.headers.host.includes('localhost')) {
     command = 'pixlet'
   }
