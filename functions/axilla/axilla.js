@@ -58,9 +58,15 @@ exports.handler = async (event, context) => {
     }
   }
 
-  // setup pixlet
-  const isLocal = event.headers.host.includes('localhost')
-  const command = isLocal ? 'pixlet' : `${CWD}pixlet-aws`
+  // pixlet binary
+  let command = `${CWD}pixlet/pixlet-aws`
+  if (process.env.CI) {
+    command = `${CWD}pixlet/pixlet-darwin`
+  } else if (event.headers.host.includes('localhost')) {
+    command = 'pixlet'
+  }
+
+  // pixlet args
   const outputPath = `${TMP}output.${format}`
   const args = ['render', appletPath, `--output=${outputPath}`]
   if (format === FORMATS.GIF) {
