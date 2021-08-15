@@ -9,6 +9,8 @@ jobs:
   tests:
     name: Unit Tests
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
     steps:
       - uses: actions/checkout@v2
       - name: Install Dependencies

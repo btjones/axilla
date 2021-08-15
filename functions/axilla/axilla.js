@@ -1,9 +1,17 @@
+const dotenv = require('dotenv');
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
 const fs = require('fs').promises
 const util = require('util')
 const fetch = require('node-fetch')
 const execFile = util.promisify(require('child_process').execFile)
 
 exports.handler = async (event, context) => {
+
+  console.log('-----------------------------')
+  console.log('process.env', process.env)
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+  console.log('process.env.PIXLET', process.env.PIXLET)
 
   const CWD = `${__dirname}/`
   const TMP = '/tmp/'
@@ -58,15 +66,7 @@ exports.handler = async (event, context) => {
     }
   }
 
-  // pixlet binary
-  let command = `${CWD}pixlet/pixlet-aws`
-  if (process.env.CI) {
-    command = `${CWD}pixlet/pixlet-linux`
-  } else if (event.headers.host.includes('localhost')) {
-    command = 'pixlet'
-  }
-
-  // pixlet args
+  // setup pixlet
   const outputPath = `${TMP}output.${format}`
   const args = ['render', appletPath, `--output=${outputPath}`]
   if (format === FORMATS.GIF) {
@@ -82,7 +82,7 @@ exports.handler = async (event, context) => {
 
   // run pixlet
   try {
-    await execFile(command, args)
+    await execFile(process.env.PIXLET, args)
   } catch (error) {
     const appletMessage = !!appletUrl ? 'Ensure the provided applet is valid.' : ''
     return {
