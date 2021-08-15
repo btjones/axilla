@@ -56,12 +56,15 @@ Axilla is deployed to [Netlify](https://www.netlify.com) and utilizes [Netlify F
 
 ## Local Development
 
-- [Install Netlify Dev](https://www.netlify.com/products/dev/)
-- [Install Pixlet](https://github.com/tidbyt/pixlet#getting-started)
+1. [Install Netlify Dev](https://www.netlify.com/products/dev/)
+2. [Install Pixlet](https://github.com/tidbyt/pixlet#getting-started)
+3. Install Axilla dependencies:
 
-Run Netlify Dev:
+        npm install
 
-    netlify dev
+4. Launch Axilla locally:
+
+        npm run dev
 
 Note: When running locally, Axilla assumes you have Pixlet installed globally on your system and will use the `pixlet` command to execute. A version of Pixlet is included in this repo but has been built to run on the [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/) operating system so that it can run when deployed as a Netlify/Lambda function.
 

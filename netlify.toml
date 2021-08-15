@@ -1,7 +1,3 @@
-[build.environment]
-  # assumes `pixlet` is in the PATH when running locally
-  PIXLET_BINARY = "pixlet"
-
 [context.production.environment]
   PIXLET_BINARY = "pixlet-aws"
   PIXLET_BINARY_PATH = "./functions/axilla/pixlet/"

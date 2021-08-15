@@ -1,12 +1,9 @@
-const LambdaTester = require('lambda-tester')
+const lambdaTester = require('lambda-tester')
 const { JSDOM } = require('jsdom')
 const axilla = require('../functions/axilla/axilla').handler
 
 const DEFAULT_EVENT = {
   queryStringParameters: {},
-  headers: {
-    host: 'localhost'
-  }
 }
 
 const REGEX_IMG_SRC = /^data:image\/([a-z]*);base64,(.*)$/g
@@ -25,7 +22,7 @@ function getImageInfo(html) {
 describe('axilla', () => {
 
   it('returns defaults', async () => {
-    await LambdaTester(axilla)
+    await lambdaTester(axilla)
       .event(DEFAULT_EVENT)
       .expectResolve((result) => {
         const image = getImageInfo(result.body)
