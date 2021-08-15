@@ -18,12 +18,12 @@
   },
   "homepage": "https://github.com/btjones/axilla",
   "dependencies": {
-    "dotenv": "^10.0.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "jest": "^27.0.6",
     "jsdom": "^17.0.0",
-    "lambda-tester": "^4.0.1"
+    "lambda-tester": "^4.0.1",
+    "netlify-plugin-inline-functions-env": "^1.0.9"
   }
 }

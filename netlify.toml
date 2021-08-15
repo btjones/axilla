@@ -1,3 +1,25 @@
+[build.environment]
+  # assumes `pixlet` is in the PATH when running locally
+  PIXLET_BINARY = "pixlet"
+
+[context.production.environment]
+  PIXLET_BINARY = "pixlet-aws"
+  PIXLET_BINARY_PATH = "./functions/axilla/pixlet/"
+  LD_LIBRARY_PATH = "./functions/axilla/lib"
+
+[context.branch-deploy.environment]
+  PIXLET_BINARY = "pixlet-aws"
+  PIXLET_BINARY_PATH = "./functions/axilla/pixlet/"
+  LD_LIBRARY_PATH = "./functions/axilla/lib"
+
+[context.deploy-preview.environment]
+  PIXLET_BINARY = "pixlet-aws"
+  PIXLET_BINARY_PATH = "./functions/axilla/pixlet/"
+  LD_LIBRARY_PATH = "./functions/axilla/lib"
+
+[[plugins]]
+  package = "netlify-plugin-inline-functions-env"
+
 [[redirects]]
   from = "/"
   to = "/.netlify/functions/axilla"

@@ -1,21 +1,10 @@
-const dotenv = require('dotenv');
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-
 const fs = require('fs').promises
+const path = require('path');
 const util = require('util')
 const fetch = require('node-fetch')
 const execFile = util.promisify(require('child_process').execFile)
 
 exports.handler = async (event, context) => {
-
-  console.log('-----------------------------')
-  console.log('process.env', process.env)
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-  console.log('process.env.PIXLET', process.env.PIXLET)
-
-  const CWD = `${__dirname}/`
-  const TMP = '/tmp/'
-  const ASSETS = `${CWD}assets/`
 
   const PARAMS = [
     'format',
@@ -34,9 +23,17 @@ exports.handler = async (event, context) => {
     BASE64: 'base64',
   }
 
-  const DEFAULT_APPLET_PATH = `${ASSETS}default.star`
-  const INPUT_APPLET_PATH = `${TMP}input.star`
-  const HTML_TEMPLATE_PATH = `${ASSETS}basic.html`
+  // environment variables
+  const PIXLET_BINARY = process.env.PIXLET_BINARY
+  const PIXLET_BINARY_PATH = process.env.PIXLET_BINARY_PATH
+  const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
+
+  // static paths
+  const TMP_PATH = '/tmp'
+  const ASSETS_PATH = path.join(__dirname, 'assets')
+  const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
+  const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
+  const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
   // query params
   const params = event.queryStringParameters
@@ -67,7 +64,9 @@ exports.handler = async (event, context) => {
   }
 
   // setup pixlet
-  const outputPath = `${TMP}output.${format}`
+  const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
+  const opts = LD_LIBRARY_PATH ? { env: { 'LD_LIBRARY_PATH': LD_LIBRARY_PATH } } : undefined
+  const outputPath = path.join(TMP_PATH, `output.${format}`)
   const args = ['render', appletPath, `--output=${outputPath}`]
   if (format === FORMATS.GIF) {
     args.push('--gif=true')
@@ -82,12 +81,12 @@ exports.handler = async (event, context) => {
 
   // run pixlet
   try {
-    await execFile(process.env.PIXLET, args)
+    await execFile(command, args, opts)
   } catch (error) {
     const appletMessage = !!appletUrl ? 'Ensure the provided applet is valid.' : ''
     return {
       statusCode: 500,
-      body: `Error: Failed to generate image with Pixlet. ${appletMessage}`
+      body: `Error: Failed to generate image with Pixlet. ${appletMessage} ${error.message}`
     }
   }
 

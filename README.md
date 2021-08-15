@@ -52,13 +52,7 @@ Axilla is deployed to [Netlify](https://www.netlify.com) and utilizes [Netlify F
 
 1. Fork this repo (click Fork button on the top-right corner of this page)
 2. [Link your forked repo to Netlify](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/)
-3. Set the `LD_LIBRARY_PATH` environment variable in your Netlify settings
-    1. go here (replace `YOUR-SITE-NAME` with your netlify site name): https://app.netlify.com/sites/YOUR-SITE-NAME/settings/deploys#environment
-    2. Add a new environment variable:
-        - name: `LD_LIBRARY_PATH`
-        - value: `/var/task/functions/axilla/lib`
-4. Trigger a deploy (either by pushing to your `main` branch or manually via the Netlify UI)
-5. Visit https://YOU-SITE-NAME.netlify.app/
+3. Visit https://YOUR-SITE-NAME.netlify.app/
 
 ## Local Development
 

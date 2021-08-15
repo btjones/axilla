@@ -10,7 +10,8 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-latest
     env:
-      NODE_ENV: test
+      PIXLET_BINARY_PATH: ./functions/axilla/pixlet/
+      PIXLET_BINARY: pixlet-github
     steps:
       - uses: actions/checkout@v2
       - name: Install Dependencies
