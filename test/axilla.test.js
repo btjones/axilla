@@ -1,6 +1,11 @@
 const lambdaTester = require('lambda-tester')
 const { JSDOM } = require('jsdom')
 const axilla = require('../functions/axilla/axilla').handler
+const fetch = require('node-fetch')
+const { readFileSync } = require('fs')
+
+// mock node-fetch so that we can load local files instead
+jest.mock('node-fetch', () => jest.fn())
 
 // expected base64 output from the test.star applet
 const APPLET_BASE64_WEBP = 'UklGRjoAAABXRUJQVlA4TC0AAAAvP8AHAA8w//M///MfeFDbSFIzeNcGZRPSKjFpRP8nAAB5ALkDZwD7FYC7/CQA'
@@ -11,6 +16,9 @@ const APPLET_BASE64_GIF_WITH_PARAM = 'R0lGODlhQAAgAAAAACH5BAAFAAAALAAAAABAACAAgA
 // used to test for valid image format and base64 encoding
 const REGEX_IMG_SRC = /^data:image\/([a-z]*);base64,(.*)$/g
 const REGEX_BASE64 = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/
+
+// applet test file
+const APPLET_TEST_PATH = 'test/test.star'
 
 // returns the format and base64 portion of the img tag src attribute from the provided html string
 const getImageInfo = (html) => {
@@ -31,6 +39,19 @@ const getEvent = (params = {}) => {
 }
 
 describe('axilla', () => {
+
+  // replace fetch implementation and load local file instead
+  fetch.mockImplementation((path, options) => {
+    const data = readFileSync(path, 'utf8')
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      statusText: '',
+      text: () => {
+        return data
+      },
+    })
+  })
 
   describe('defaults', () => {
 
@@ -140,7 +161,7 @@ describe('axilla', () => {
 
     it('returns custom applet data', async () => {
       await lambdaTester(axilla)
-        .event(getEvent({ applet: 'http://localhost:8888/test/test.star' }))
+        .event(getEvent({ applet: APPLET_TEST_PATH }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
@@ -153,7 +174,7 @@ describe('axilla', () => {
     it('passes query parameters to custom applet', async () => {
       await lambdaTester(axilla)
         .event(getEvent({
-          applet: 'http://localhost:8888/test/test.star',
+          applet: APPLET_TEST_PATH,
           greeting: '¡hola!',
         }))
         .expectResolve((result) => {
@@ -174,7 +195,7 @@ describe('axilla', () => {
         .event(getEvent({
           format: 'gif',
           output: 'image',
-          applet: 'http://localhost:8888/test/test.star',
+          applet: APPLET_TEST_PATH,
           greeting: '¡hola!',
         }))
         .expectResolve((result) => {
@@ -189,7 +210,7 @@ describe('axilla', () => {
         .event(getEvent({
           format: 'webp',
           output: 'base64',
-          applet: 'http://localhost:8888/test/test.star',
+          applet: APPLET_TEST_PATH,
           greeting: '¡hola!',
         }))
         .expectResolve((result) => {
@@ -204,7 +225,7 @@ describe('axilla', () => {
         .event(getEvent({
           format: 'gif',
           output: 'html',
-          applet: 'http://localhost:8888/test/test.star',
+          applet: APPLET_TEST_PATH,
         }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
