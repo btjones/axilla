@@ -2,7 +2,7 @@ const lambdaTester = require('lambda-tester')
 const { JSDOM } = require('jsdom')
 const axilla = require('../functions/axilla/axilla').handler
 const fetch = require('node-fetch')
-const { readFileSync } = require('fs')
+const { readFile } = require('fs').promises
 
 // mock node-fetch so that we can load local files instead
 jest.mock('node-fetch', () => jest.fn())
@@ -41,8 +41,8 @@ const getEvent = (params = {}) => {
 describe('axilla', () => {
 
   // replace fetch implementation and load local file instead
-  fetch.mockImplementation((path, options) => {
-    const data = readFileSync(path, 'utf8')
+  fetch.mockImplementation(async (path, options) => {
+    const data = await readFile(path, 'utf8')
     return Promise.resolve({
       ok: true,
       status: 200,
