@@ -58,7 +58,7 @@ exports.handler = async (event, context) => {
     } catch (error) {
       return {
         statusCode: 500,
-        body: `Error: ${error.message}`
+        body: `Error: Could not download applet. ${error.message}`
       }
     }
   }
@@ -97,7 +97,7 @@ exports.handler = async (event, context) => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: `Error: ${error.message}`
+      body: `Error: Could not read output file. ${error.message}`
     }
   }  
 

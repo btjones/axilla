@@ -11,6 +11,6 @@ def main(config):
       render.Text(
         content=text,
       )
-    ],
-  ),
+    ]
+  )
 )
