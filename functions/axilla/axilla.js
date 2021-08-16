@@ -4,36 +4,36 @@ const util = require('util')
 const fetch = require('node-fetch')
 const execFile = util.promisify(require('child_process').execFile)
 
+const PARAMS = [
+  'format',
+  'output',
+  'applet',
+]
+
+const FORMATS = {
+  WEBP: 'webp',
+  GIF: 'gif',
+}
+
+const OUTPUTS = {
+  HTML: 'html', 
+  IMAGE: 'image',
+  BASE64: 'base64',
+}
+
+// environment variables
+const PIXLET_BINARY = process.env.PIXLET_BINARY
+const PIXLET_BINARY_PATH = process.env.PIXLET_BINARY_PATH
+const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
+
+// static paths
+const TMP_PATH = '/tmp'
+const ASSETS_PATH = path.join(__dirname, 'assets')
+const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
+const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
+const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
+
 exports.handler = async (event, context) => {
-
-  const PARAMS = [
-    'format',
-    'output',
-    'applet',
-  ]
-
-  const FORMATS = {
-    WEBP: 'webp',
-    GIF: 'gif',
-  }
-
-  const OUTPUTS = {
-    HTML: 'html', 
-    IMAGE: 'image',
-    BASE64: 'base64',
-  }
-
-  // environment variables
-  const PIXLET_BINARY = process.env.PIXLET_BINARY
-  const PIXLET_BINARY_PATH = process.env.PIXLET_BINARY_PATH
-  const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
-
-  // static paths
-  const TMP_PATH = '/tmp'
-  const ASSETS_PATH = path.join(__dirname, 'assets')
-  const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
-  const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
-  const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
   // query params
   const params = event.queryStringParameters
