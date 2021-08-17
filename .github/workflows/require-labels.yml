@@ -1,0 +1,17 @@
+name: Label
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  label:
+    name: Require PR Label major/minor/patch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mheap/github-action-required-labels@v1.1.2
+        with:
+          mode: exactly
+          count: 1
+          labels: "major, minor, patch"

@@ -1,0 +1,27 @@
+name: Bump Package Version
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  bump-package-version:
+    # only run if the PR closed by merging
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: copapow/version-bump-package@v1
+        id: bump
+        with:
+          major_label: major
+          minor_label: minor
+          patch_label: patch
+          default_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: EndBug/add-and-commit@v7.2.1
+        with:
+          branch: main
+          message: "bump version: ${{ steps.bump.outputs.new_version }}"

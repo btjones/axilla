@@ -52,19 +52,28 @@ Axilla is deployed to [Netlify](https://www.netlify.com) and utilizes [Netlify F
 
 1. Fork this repo (click Fork button on the top-right corner of this page)
 2. [Link your forked repo to Netlify](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/)
-3. Set the `LD_LIBRARY_PATH` environment variable in your Netlify settings
-    1. go here (replace `YOUR-SITE-NAME` with your netlify site name): https://app.netlify.com/sites/YOUR-SITE-NAME/settings/deploys#environment
-    2. Add a new environment variable:
-        - name: `LD_LIBRARY_PATH`
-        - value: `/var/task/functions/axilla/lib`
-4. Trigger a deploy (either by pushing to your `main` branch or manually via the Netlify UI)
-5. Visit https://YOU-SITE-NAME.netlify.app/
+3. Visit https://YOUR-SITE-NAME.netlify.app/
 
 ## Local Development
 
-- [Install Netlify Dev](https://www.netlify.com/products/dev/)
-- [Install Pixlet](https://github.com/tidbyt/pixlet#getting-started)
+1. [Install Netlify Dev](https://www.netlify.com/products/dev/)
+2. [Install Pixlet](https://github.com/tidbyt/pixlet#getting-started)
+3. Install Axilla dependencies:
 
-Run `netlify dev` from your Axilla project directory.
+        npm install
+
+4. Launch Axilla locally:
+
+        npm run dev
 
 Note: When running locally, Axilla assumes you have Pixlet installed globally on your system and will use the `pixlet` command to execute. A version of Pixlet is included in this repo but has been built to run on the [Amazon Linux 2](https://aws.amazon.com/amazon-linux-2/) operating system so that it can run when deployed as a Netlify/Lambda function.
+
+### Test
+
+Run unit tests:
+
+    npm run test
+
+Run unit tests and watch for changes:
+
+    npm run test:watch
