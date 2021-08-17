@@ -7,7 +7,8 @@ on:
       - main
 
 jobs:
-  bump-package-version:
+  bump:
+    name: Bump Package Version
     # only run if the PR closed by merging
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
@@ -25,3 +26,19 @@ jobs:
         with:
           branch: main
           message: "bump version: ${{ steps.bump.outputs.new_version }}"
+  release:
+    name: Create Release
+    needs: bump
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create Release
+        id: release
+        uses: justincy/github-action-npm-release@2.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Print Release Output
+        if: ${{ steps.release.outputs.released == 'true' }}
+        run: echo Release ID ${{ steps.release.outputs.release_id }}
