@@ -1,8 +1,9 @@
 const lambdaTester = require('lambda-tester')
 const { JSDOM } = require('jsdom')
-const axilla = require('../functions/axilla/axilla').handler
 const fetch = require('node-fetch')
 const { readFile } = require('fs').promises
+
+const axilla = require('../functions/axilla/axilla').handler
 
 // mock node-fetch so that we can load local files instead
 jest.mock('node-fetch')
@@ -35,19 +36,17 @@ const getImageInfo = (html) => {
 // returns a function event object with the provided params
 const getEvent = (params = {}) => {
   return {
-    queryStringParameters: params
+    queryStringParameters: params,
   }
 }
 
 // replace fetch implementation and load local file instead
-const mockFetchGood = async (path, options) => {
+const mockFetchGood = async (path) => {
   const data = await readFile(path, 'utf8')
   return Promise.resolve({
     ok: true,
     status: 200,
-    text: () => {
-      return data
-    },
+    text: () => data,
   })
 }
 
@@ -97,7 +96,7 @@ describe('axilla', () => {
 
     it('returns webp image for invalid format', async () => {
       await lambdaTester(axilla)
-      .event(getEvent({ format: '🌶' }))
+        .event(getEvent({ format: '🌶' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
