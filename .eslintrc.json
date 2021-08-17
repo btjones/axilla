@@ -1,0 +1,23 @@
+{
+  "env": {
+    "commonjs": true,
+    "es2021": true,
+    "jest/globals": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb-base"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "plugins": [
+    "jest"
+  ],
+  "rules": {
+    "arrow-body-style": ["off"],
+    "no-extra-boolean-cast": ["off"],
+    "padded-blocks": ["off"],
+    "semi": [2, "never"]
+  }
+}
