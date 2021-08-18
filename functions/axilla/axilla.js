@@ -48,7 +48,11 @@ exports.handler = async (event) => {
   // download the applet if provided
   if (!!appletUrl) {
     try {
-      const response = await fetch(appletUrl, { headers: { Accept: 'text/plain' } })
+      const response = await fetch(appletUrl, {
+        headers: { Accept: 'text/plain' },
+        size: 10000000, // 10 MB
+        timeout: 30000, // 30 seconds
+      })
       if (!response.ok) {
         return {
           statusCode: response.status,
