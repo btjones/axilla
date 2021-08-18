@@ -1,9 +1,12 @@
 const lambdaTester = require('lambda-tester')
 const { JSDOM } = require('jsdom')
 const fetch = require('node-fetch')
-const { readFile } = require('fs').promises
+const fs = require('fs')
+const axilla = require('../functions/axilla/axilla')
 
-const axilla = require('../functions/axilla/axilla').handler
+const { handler, test } = axilla
+const { readFile } = fs.promises
+const { accessSync } = fs
 
 // mock node-fetch so that we can load local files instead
 jest.mock('node-fetch')
@@ -55,7 +58,7 @@ describe('axilla', () => {
   describe('defaults', () => {
 
     it('returns defaults when no parametrs are provided', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent())
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -71,7 +74,7 @@ describe('axilla', () => {
   describe('format', () => {
 
     it('returns webp image', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ format: 'webp' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -83,7 +86,7 @@ describe('axilla', () => {
     })
 
     it('returns gif image', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ format: 'gif' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -95,7 +98,7 @@ describe('axilla', () => {
     })
 
     it('returns webp image for invalid format', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ format: '🌶' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -111,7 +114,7 @@ describe('axilla', () => {
   describe('output', () => {
 
     it('returns html', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ output: 'html' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -123,7 +126,7 @@ describe('axilla', () => {
     })
 
     it('returns image', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ output: 'image' }))
         .expectResolve((result) => {
           expect(result.statusCode).toEqual(200)
@@ -133,7 +136,7 @@ describe('axilla', () => {
     })
 
     it('returns base64 text', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ output: 'base64' }))
         .expectResolve((result) => {
           expect(result.statusCode).toEqual(200)
@@ -143,7 +146,7 @@ describe('axilla', () => {
     })
 
     it('returns html for invalid output', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ output: '🧀' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -160,7 +163,7 @@ describe('axilla', () => {
 
     it('returns custom applet data', async () => {
       fetch.mockImplementationOnce(mockFetchGood)
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ applet: APPLET_TEST_PATH }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -173,7 +176,7 @@ describe('axilla', () => {
 
     it('passes query parameters to custom applet', async () => {
       fetch.mockImplementationOnce(mockFetchGood)
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({
           applet: APPLET_TEST_PATH,
           greeting: '¡hola!',
@@ -192,7 +195,7 @@ describe('axilla', () => {
   describe('other parameters', () => {
 
     it('accepts other parameters', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ text: 'wowsers' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -204,7 +207,7 @@ describe('axilla', () => {
     })
 
     it('ignores parameters that begin with `-`', async () => {
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ '--hmm': 'nope' }))
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
@@ -221,7 +224,7 @@ describe('axilla', () => {
 
     it('gif + image + applet + custom parameter', async () => {
       fetch.mockImplementationOnce(mockFetchGood)
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({
           format: 'gif',
           output: 'image',
@@ -237,7 +240,7 @@ describe('axilla', () => {
 
     it('webp + base64 + applet + custom parameter', async () => {
       fetch.mockImplementationOnce(mockFetchGood)
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({
           format: 'webp',
           output: 'base64',
@@ -253,7 +256,7 @@ describe('axilla', () => {
 
     it('gif + html + applet', async () => {
       fetch.mockImplementationOnce(mockFetchGood)
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({
           format: 'gif',
           output: 'html',
@@ -270,6 +273,30 @@ describe('axilla', () => {
 
   })
 
+  describe('cleanup', () => {
+
+    it('deletes the temp input file after processing', async () => {
+      fetch.mockImplementationOnce(mockFetchGood)
+      await lambdaTester(handler)
+        .event(getEvent({ applet: APPLET_TEST_PATH }))
+        .expectResolve((result) => {
+          expect(result.statusCode).toEqual(200)
+          expect(() => { accessSync(test.INPUT_APPLET_PATH) }).toThrow()
+        })
+    })
+
+    it('deletes the temp output file after processing', async () => {
+      const tempOutputPath = test.getOutputPath('webp')
+      await lambdaTester(handler)
+        .event(getEvent())
+        .expectResolve((result) => {
+          expect(result.statusCode).toEqual(200)
+          expect(() => { accessSync(tempOutputPath) }).toThrow()
+        })
+    })
+
+  })
+
   describe('errors', () => {
 
     it('returns an error when failing to fetch applet', async () => {
@@ -279,7 +306,7 @@ describe('axilla', () => {
         status: 404,
         text: () => null,
       })
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ applet: 'https://gopher.farts' }))
         .expectResolve((result) => {
           expect(result.statusCode).toEqual(404)
@@ -289,7 +316,7 @@ describe('axilla', () => {
 
     it('returns an error for an invalid applet url', async () => {
       fetch.mockImplementationOnce(mockFetchGood)
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ applet: 'gopher:////farts' }))
         .expectResolve((result) => {
           expect(result.statusCode).toEqual(500)
@@ -304,7 +331,7 @@ describe('axilla', () => {
         status: 200,
         text: () => null,
       })
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ applet: APPLET_TEST_PATH }))
         .expectResolve((result) => {
           expect(result.statusCode).toEqual(500)
@@ -314,7 +341,7 @@ describe('axilla', () => {
 
     it('returns an error for a bad applet', async () => {
       fetch.mockImplementationOnce(mockFetchGood)
-      await lambdaTester(axilla)
+      await lambdaTester(handler)
         .event(getEvent({ applet: APPLET_TEST_PATH_BAD }))
         .expectResolve((result) => {
           expect(result.statusCode).toEqual(500)

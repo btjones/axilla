@@ -36,6 +36,8 @@ const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
 const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
+const getOutputPath = (format) => path.join(TMP_PATH, `output.${format}`)
+
 exports.handler = async (event) => {
   // query params
   const params = event.queryStringParameters
@@ -72,7 +74,7 @@ exports.handler = async (event) => {
   // setup pixlet
   const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
   const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
-  const outputPath = path.join(TMP_PATH, `output.${format}`)
+  const outputPath = getOutputPath(format)
   const args = ['render', appletPath, `--output=${outputPath}`]
   if (format === FORMATS.GIF) {
     args.push('--gif=true')
@@ -107,6 +109,10 @@ exports.handler = async (event) => {
       body: `Error: Could not read output file. ${error.message}`,
     }
   }
+
+  // delete the temp input and output files
+  try { await fs.unlink(INPUT_APPLET_PATH) } catch (error) { /* noop */ }
+  try { await fs.unlink(outputPath) } catch (error) { /* noop */ }
 
   // check base64 data
   if (!imageBase64) {
@@ -159,4 +165,10 @@ exports.handler = async (event) => {
       }
     }
   }
+}
+
+// for use with unit tests
+exports.test = {
+  getOutputPath,
+  INPUT_APPLET_PATH,
 }
