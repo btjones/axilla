@@ -5,6 +5,7 @@
   "main": "",
   "scripts": {
     "dev": "PIXLET_BINARY=pixlet netlify dev",
+    "lint": "eslint --ext .js ./",
     "test": "PIXLET_BINARY=pixlet jest",
     "test:watch": "PIXLET_BINARY=pixlet jest --watch",
     "test:ci": "jest"
@@ -23,6 +24,10 @@
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-jest": "^24.4.0",
     "jest": "^27.0.6",
     "jsdom": "^17.0.0",
     "lambda-tester": "^4.0.1",

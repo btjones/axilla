@@ -16,15 +16,18 @@ const FORMATS = {
 }
 
 const OUTPUTS = {
-  HTML: 'html', 
+  HTML: 'html',
   IMAGE: 'image',
   BASE64: 'base64',
 }
 
 // environment variables
+// these are dynamically generated using a plugin so destructuring cannot be used
+/* eslint-disable prefer-destructuring */
 const PIXLET_BINARY = process.env.PIXLET_BINARY
 const PIXLET_BINARY_PATH = process.env.PIXLET_BINARY_PATH
 const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
+/* eslint-enable prefer-destructuring */
 
 // static paths
 const TMP_PATH = '/tmp'
@@ -33,15 +36,14 @@ const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
 const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
-exports.handler = async (event, context) => {
-
+exports.handler = async (event) => {
   // query params
   const params = event.queryStringParameters
   const appletUrl = params.applet
   const appletPath = appletUrl ? INPUT_APPLET_PATH : DEFAULT_APPLET_PATH
-  const format = params.format && FORMATS[params.format.toUpperCase()] || FORMATS.WEBP
-  const output = params.output && OUTPUTS[params.output.toUpperCase()] || OUTPUTS.HTML
-  console.log('params', params)
+  const format = (params.format && FORMATS[params.format.toUpperCase()]) || FORMATS.WEBP
+  const output = (params.output && OUTPUTS[params.output.toUpperCase()]) || OUTPUTS.HTML
+  console.log('params', params) // eslint-disable-line no-console
 
   // download the applet if provided
   if (!!appletUrl) {
@@ -50,22 +52,22 @@ exports.handler = async (event, context) => {
       if (!response.ok) {
         return {
           statusCode: response.status,
-          body: `Error: Could not fetch applet. ${response.statusText}`
-        }        
+          body: `Error: Could not fetch applet. ${response.statusText}`,
+        }
       }
       const appletText = await response.text()
-      await fs.writeFile(INPUT_APPLET_PATH, appletText) 
+      await fs.writeFile(INPUT_APPLET_PATH, appletText)
     } catch (error) {
       return {
         statusCode: 500,
-        body: `Error: Could not download applet. ${error.message}`
+        body: `Error: Could not download applet. ${error.message}`,
       }
     }
   }
 
   // setup pixlet
   const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
-  const opts = LD_LIBRARY_PATH ? { env: { 'LD_LIBRARY_PATH': LD_LIBRARY_PATH } } : undefined
+  const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
   const outputPath = path.join(TMP_PATH, `output.${format}`)
   const args = ['render', appletPath, `--output=${outputPath}`]
   if (format === FORMATS.GIF) {
@@ -73,7 +75,7 @@ exports.handler = async (event, context) => {
   }
 
   // pass non-reserved params to pixlet
-  Object.keys(params).forEach(key => {
+  Object.keys(params).forEach((key) => {
     if (!PARAMS.includes(key)) {
       args.push(`${key}=${params[key]}`)
     }
@@ -86,7 +88,7 @@ exports.handler = async (event, context) => {
     const appletMessage = !!appletUrl ? 'Ensure the provided applet is valid.' : ''
     return {
       statusCode: 500,
-      body: `Error: Failed to generate image with Pixlet. ${appletMessage} ${error.message}`
+      body: `Error: Failed to generate image with Pixlet. ${appletMessage} ${error.message}`,
     }
   }
 
@@ -97,27 +99,26 @@ exports.handler = async (event, context) => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: `Error: Could not read output file. ${error.message}`
+      body: `Error: Could not read output file. ${error.message}`,
     }
-  }  
+  }
 
   // check base64 data
   if (!imageBase64) {
     return {
       statusCode: 500,
-      body: 'Error: Could not read output image.'
+      body: 'Error: Could not read output image.',
     }
   }
 
   switch (output) {
-
     // raw image
     case OUTPUTS.IMAGE:
       return {
         statusCode: 200,
         headers: { 'content-type': `image/${format}` },
         body: imageBase64,
-        isBase64Encoded: true
+        isBase64Encoded: true,
       }
 
     // base64 image text
@@ -125,32 +126,32 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 200,
         headers: { 'content-type': 'text/plain' },
-        body: imageBase64
+        body: imageBase64,
       }
 
     // html preview
     case OUTPUTS.HTML:
-    default:
+    default: {
       let html
       try {
         html = await fs.readFile(HTML_TEMPLATE_PATH, 'utf8')
         html = html.replace(/\{format\}|\{image\}/gi, (match) => {
           if (match === '{format}') return format
           if (match === '{image}') return imageBase64
+          return match
         })
       } catch (error) {
         return {
           statusCode: 500,
-          body: `Error: Could not generate html. ${error.message}`
+          body: `Error: Could not generate html. ${error.message}`,
         }
       }
 
       return {
         statusCode: 200,
         headers: { 'content-type': 'text/html' },
-        body: html
+        body: html,
       }
-
+    }
   }
-
 }
