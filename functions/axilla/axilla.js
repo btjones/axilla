@@ -79,8 +79,9 @@ exports.handler = async (event) => {
   }
 
   // pass non-reserved params to pixlet
+  // don't allow params that begin with `-`
   Object.keys(params).forEach((key) => {
-    if (!PARAMS.includes(key)) {
+    if (!PARAMS.includes(key) && key.charAt(0) !== '-') {
       args.push(`${key}=${params[key]}`)
     }
   })
