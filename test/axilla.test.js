@@ -189,6 +189,34 @@ describe('axilla', () => {
 
   })
 
+  describe('other parameters', () => {
+
+    it('accepts other parameters', async () => {
+      await lambdaTester(axilla)
+        .event(getEvent({ text: 'wowsers' }))
+        .expectResolve((result) => {
+          const image = getImageInfo(result.body)
+          expect(result.statusCode).toEqual(200)
+          expect(result.headers['content-type']).toEqual('text/html')
+          expect(image.format).toEqual('webp')
+          expect(image.base64).toMatch(REGEX_BASE64)
+        })
+    })
+
+    it('ignores parameters that begin with `-`', async () => {
+      await lambdaTester(axilla)
+        .event(getEvent({ '--hmm': 'nope' }))
+        .expectResolve((result) => {
+          const image = getImageInfo(result.body)
+          expect(result.statusCode).toEqual(200)
+          expect(result.headers['content-type']).toEqual('text/html')
+          expect(image.format).toEqual('webp')
+          expect(image.base64).toMatch(REGEX_BASE64)
+        })
+    })
+
+  })
+
   describe('combinations', () => {
 
     it('gif + image + applet + custom parameter', async () => {
@@ -244,7 +272,7 @@ describe('axilla', () => {
 
   describe('errors', () => {
 
-    it('returns an error for when failing to fetch applet', async () => {
+    it('returns an error when failing to fetch applet', async () => {
       // mock fetch to return a 404
       fetch.mockResolvedValue({
         ok: false,
