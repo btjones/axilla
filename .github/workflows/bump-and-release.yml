@@ -30,7 +30,7 @@ jobs:
           message: "bump version: ${{ steps.bump.outputs.new_version }}"
       - name: Create Release
         id: release
-        uses: justincy/github-action-npm-release@2.0.2
+        uses: btjones/github-action-npm-release@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Release Details
