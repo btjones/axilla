@@ -16,7 +16,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          persist-credentials: false
           token: ${{ secrets.AXILLA_PAT }}
       - uses: copapow/version-bump-package@v1
         id: bump
@@ -30,4 +29,3 @@ jobs:
         with:
           branch: main
           message: "bump version: ${{ steps.bump.outputs.new_version }}"
-          github_token: ${{ secrets.AXILLA_PAT }}
