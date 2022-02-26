@@ -16,6 +16,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          persist-credentials: false
+          token: ${{ secrets.AXILLA_PAT }}
       - uses: copapow/version-bump-package@v1
         id: bump
         with:
@@ -23,8 +25,9 @@ jobs:
           minor_label: minor
           patch_label: patch
           default_branch: main
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.AXILLA_PAT }}
       - uses: EndBug/add-and-commit@v7.2.1
         with:
           branch: main
           message: "bump version: ${{ steps.bump.outputs.new_version }}"
+          github_token: ${{ secrets.AXILLA_PAT }}
