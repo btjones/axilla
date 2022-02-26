@@ -15,11 +15,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          persist-credentials: false
+          token: ${{ secrets.AXILLA_PAT }}
       - name: Create Release
         id: release
         uses: justincy/github-action-npm-release@2.0.2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.AXILLA_PAT }}
       - name: Release Details
         if: ${{ steps.release.outputs.released == 'true' }}
         run: echo Release ID ${{ steps.release.outputs.release_id }}
