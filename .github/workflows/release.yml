@@ -1,0 +1,25 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump:
+    name: Create Release
+    # runs when commit message starts with 'bump version:'
+    if: "startsWith(github.event.head_commit.message, 'bump version:')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create Release
+        id: release
+        uses: justincy/github-action-npm-release@2.0.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release Details
+        if: ${{ steps.release.outputs.released == 'true' }}
+        run: echo Release ID ${{ steps.release.outputs.release_id }}
