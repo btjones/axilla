@@ -52,7 +52,7 @@ exports.handler = async (event) => {
     try {
       const response = await fetch(appletUrl, {
         headers: { Accept: 'text/plain' },
-        size: 10000000, // 10 MB
+        size: 50000000, // 50 MB
         timeout: 30000, // 30 seconds
       })
       if (!response.ok) {
@@ -71,6 +71,9 @@ exports.handler = async (event) => {
     }
   }
 
+  console.log('PIXLET_BINARY_PATH', PIXLET_BINARY_PATH)
+  console.log('PIXLET_BINARY', PIXLET_BINARY)
+
   // setup pixlet
   const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
   const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
@@ -87,6 +90,10 @@ exports.handler = async (event) => {
       args.push(`${key}=${params[key]}`)
     }
   })
+
+  console.log('command', command)
+  console.log('args', args)
+  console.log('opts', opts)
 
   // run pixlet
   try {
