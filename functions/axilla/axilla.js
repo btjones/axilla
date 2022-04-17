@@ -4,10 +4,12 @@ const util = require('util')
 const fetch = require('node-fetch')
 const execFile = util.promisify(require('child_process').execFile)
 
-const PARAMS = [
+const RESERVERD_PARAMS = [
   'format',
   'output',
   'applet',
+  'axilla_version',
+  'pixlet_version',
 ]
 
 const FORMATS = {
@@ -45,7 +47,50 @@ exports.handler = async (event) => {
   const appletPath = appletUrl ? INPUT_APPLET_PATH : DEFAULT_APPLET_PATH
   const format = (params.format && FORMATS[params.format.toUpperCase()]) || FORMATS.WEBP
   const output = (params.output && OUTPUTS[params.output.toUpperCase()]) || OUTPUTS.HTML
+  const showAxillaVersion = params.axilla_version === 'true'
+  const showPixletVersion = params.pixlet_version === 'true'
   console.log('params', params) // eslint-disable-line no-console
+
+  // return the axilla version when `axilla_version` param is true
+  if (showAxillaVersion) {
+    return {
+      statusCode: 200,
+      body: `Axilla version: v${process.env.npm_package_version}`,
+    }
+  }
+
+  // setup pixlet
+  const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
+  const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
+  const outputPath = getOutputPath(format)
+  const args = ['render', appletPath, `--output=${outputPath}`]
+  if (format === FORMATS.GIF) {
+    args.push('--gif=true')
+  }
+
+  // return the pixlet version when `pixlet_version` param is true
+  if (showPixletVersion) {
+    try {
+      const version = await execFile(command, ['version'], opts)
+      return {
+        statusCode: 200,
+        body: version.stdout,
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: Could not get pixlet version. ${error.message}`,
+      }
+    }
+  }
+
+  // pass non-reserved params to pixlet
+  // don't allow params that begin with `-`
+  Object.keys(params).forEach((key) => {
+    if (!RESERVERD_PARAMS.includes(key) && key.charAt(0) !== '-') {
+      args.push(`${key}=${params[key]}`)
+    }
+  })
 
   // download the applet if provided
   if (!!appletUrl) {
@@ -70,23 +115,6 @@ exports.handler = async (event) => {
       }
     }
   }
-
-  // setup pixlet
-  const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
-  const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
-  const outputPath = getOutputPath(format)
-  const args = ['render', appletPath, `--output=${outputPath}`]
-  if (format === FORMATS.GIF) {
-    args.push('--gif=true')
-  }
-
-  // pass non-reserved params to pixlet
-  // don't allow params that begin with `-`
-  Object.keys(params).forEach((key) => {
-    if (!PARAMS.includes(key) && key.charAt(0) !== '-') {
-      args.push(`${key}=${params[key]}`)
-    }
-  })
 
   // run pixlet
   try {

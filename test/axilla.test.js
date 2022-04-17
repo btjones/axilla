@@ -53,11 +53,29 @@ const mockFetchGood = async (path) => {
   })
 }
 
+describe('versions', () => {
+
+  it('returns the axilla version when the "axilla_version" param is "true"', async () => {
+    const version = process.env.npm_package_version
+    expect(version.length).toBeGreaterThan(0)
+    await lambdaTester(handler)
+      .event(getEvent({ axilla_version: 'true' }))
+      .expectResolve((result) => {
+        expect(result.body).toEqual(`Axilla version: v${version}`)
+      })
+  })
+
+  // we currently use an older version of pixlet for our github workflow
+  // the old version of pixlet does not support the "version" param
+  it.todo('returns the pixlet version when the "pixlet_version" param is "true"')
+
+})
+
 describe('axilla', () => {
 
   describe('defaults', () => {
 
-    it('returns defaults when no parametrs are provided', async () => {
+    it('returns defaults when no parameters are provided', async () => {
       await lambdaTester(handler)
         .event(getEvent())
         .expectResolve((result) => {
