@@ -16,6 +16,14 @@ _note: all query parameters are optional_
 | output    | `html`   | Output type returned by the API. `html`, `image`, or `base64`|
 | applet    | _AXILLA_ | URL of a Pixlet applet (which should be a [Starlark](https://github.com/bazelbuild/starlark) `.star` file.). Maximum file size 10MB. |
 
+### Special Parameters
+
+_note: when present, other params are ignored and an applet is not executed_
+
+| Parameter | Default     | Description |
+|-----------|-------------|-------------|
+| version   | `undefined` | When `true` returns Axilla and Pixlet version information as plain text. |
+
 ## Applet Query Parameters
 
 Query parameters can be passed to Pixlet for use within an applet (i.e. `config.get('param')`). These parameters are defined by the applet itself. _Note: Axilla query parameters listed above are reserved and will not be passed to the applet._

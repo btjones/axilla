@@ -57,7 +57,7 @@ describe('axilla', () => {
 
   describe('defaults', () => {
 
-    it('returns defaults when no parametrs are provided', async () => {
+    it('returns defaults when no parameters are provided', async () => {
       await lambdaTester(handler)
         .event(getEvent())
         .expectResolve((result) => {
@@ -356,6 +356,38 @@ describe('axilla', () => {
     it.todo('Could not read output file')
     it.todo('Could not read output image')
     it.todo('Could not generate html')
+  })
+
+  describe('version', () => {
+
+    // we currently use an older version of pixlet for our github workflow
+    // the old version of pixlet does not support the "version" param
+    // if we upgrade pixlet for the github workflow, we can run these there
+    if (process.env.IS_DEV) {
+
+      it('getPixletVersion returns formatted version info', async () => {
+        const pixletVersion = await test.getPixletVersion()
+        expect(pixletVersion).toBeDefined()
+        expect(pixletVersion.length).toBeGreaterThan(0)
+      })
+
+      it('returns version info when the "version" param is "true"', async () => {
+        await lambdaTester(handler)
+          .event(getEvent({ version: 'true' }))
+          .expectResolve((result) => {
+            expect(result.statusCode).toEqual(200)
+            expect(result.headers['content-type']).toEqual('text/plain')
+            expect(result.body.indexOf('Pixlet version:')).toBeGreaterThan(-1)
+          })
+      })
+
+    } else {
+
+      it.todo('getPixletVersion returns formatted version info (requires pixlet update)')
+      it.todo('returns version info when the "version" param is "true" (requires pixlet update)')
+
+    }
+
   })
 
 })

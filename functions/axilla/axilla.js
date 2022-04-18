@@ -4,10 +4,11 @@ const util = require('util')
 const fetch = require('node-fetch')
 const execFile = util.promisify(require('child_process').execFile)
 
-const PARAMS = [
+const RESERVERD_PARAMS = [
   'format',
   'output',
   'applet',
+  'version',
 ]
 
 const FORMATS = {
@@ -36,7 +37,16 @@ const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
 const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
+// executes pixlet with the given arguments
+const executePixlet = async (args) => {
+  const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
+  const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
+  return execFile(command, args, opts)
+}
+
+// helper functions
 const getOutputPath = (format) => path.join(TMP_PATH, `output.${format}`)
+const getPixletVersion = async () => (await executePixlet(['version'])).stdout
 
 exports.handler = async (event) => {
   // query params
@@ -45,7 +55,39 @@ exports.handler = async (event) => {
   const appletPath = appletUrl ? INPUT_APPLET_PATH : DEFAULT_APPLET_PATH
   const format = (params.format && FORMATS[params.format.toUpperCase()]) || FORMATS.WEBP
   const output = (params.output && OUTPUTS[params.output.toUpperCase()]) || OUTPUTS.HTML
-  console.log('params', params) // eslint-disable-line no-console
+  const isVersionRequest = params.version === 'true'
+
+  // setup pixlet
+  const outputPath = getOutputPath(format)
+  const args = ['render', appletPath, `--output=${outputPath}`]
+  if (format === FORMATS.GIF) {
+    args.push('--gif=true')
+  }
+
+  // return the pixlet version when the `version` param is true
+  if (isVersionRequest) {
+    try {
+      const pixletVersion = await getPixletVersion()
+      return {
+        statusCode: 200,
+        headers: { 'content-type': 'text/plain' },
+        body: pixletVersion,
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: `Error: Could not get version info. ${error.message}`,
+      }
+    }
+  }
+
+  // pass non-reserved params to pixlet
+  // don't allow params that begin with `-`
+  Object.keys(params).forEach((key) => {
+    if (!RESERVERD_PARAMS.includes(key) && key.charAt(0) !== '-') {
+      args.push(`${key}=${params[key]}`)
+    }
+  })
 
   // download the applet if provided
   if (!!appletUrl) {
@@ -71,26 +113,9 @@ exports.handler = async (event) => {
     }
   }
 
-  // setup pixlet
-  const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
-  const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
-  const outputPath = getOutputPath(format)
-  const args = ['render', appletPath, `--output=${outputPath}`]
-  if (format === FORMATS.GIF) {
-    args.push('--gif=true')
-  }
-
-  // pass non-reserved params to pixlet
-  // don't allow params that begin with `-`
-  Object.keys(params).forEach((key) => {
-    if (!PARAMS.includes(key) && key.charAt(0) !== '-') {
-      args.push(`${key}=${params[key]}`)
-    }
-  })
-
   // run pixlet
   try {
-    await execFile(command, args, opts)
+    await executePixlet(args)
   } catch (error) {
     const appletMessage = !!appletUrl ? 'Ensure the provided applet is valid.' : ''
     return {
@@ -169,6 +194,8 @@ exports.handler = async (event) => {
 
 // for use with unit tests
 exports.test = {
+  executePixlet,
+  getPixletVersion,
   getOutputPath,
   INPUT_APPLET_PATH,
 }
