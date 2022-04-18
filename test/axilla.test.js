@@ -360,12 +360,11 @@ describe('axilla', () => {
 
   describe('version', () => {
 
-    console.log('process.env.IS_DEV', process.env.IS_DEV)
-
     it('getAxillaVersion returns formatted version info that matches the package.json version', async () => {
       const axillaVersion = test.getAxillaVersion()
       const packageVersion = process.env.npm_package_version
       expect(packageVersion.length).toBeGreaterThan(0)
+      expect(packageVersion).toBeDefined()
       expect(axillaVersion).toBe(`Axilla version: v${packageVersion}`)
     })
 
@@ -376,6 +375,7 @@ describe('axilla', () => {
 
       it('getPixletVersion returns formatted version info', async () => {
         const pixletVersion = await test.getPixletVersion()
+        expect(pixletVersion).toBeDefined()
         expect(pixletVersion.length).toBeGreaterThan(0)
       })
 
