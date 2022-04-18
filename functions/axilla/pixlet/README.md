@@ -11,3 +11,7 @@ Version: 0.17.2 (commit: [2fd1466](https://github.com/tidbyt/pixlet/commit/2fd14
 Version: 0.8.2 ([official release](https://github.com/tidbyt/pixlet/releases))
 
 `pixlet-github` uses an [official pixlet linux_amd64 release](https://github.com/tidbyt/pixlet/releases). Note: Versions newer than 0.8.2 fail to execute within Github Actions (Ubuntu 20.04 aka `ubuntu-latest`). Axilla unit tests currently don't require a newer version of `pixlet` so this is ok for now.
+
+## Check Current Version
+
+Axilla also accepts a `version` param which when set to `true` will return the Pixlet version being used. [`axilla.netlify.app/?version=true`](https://axilla.netlify.app/?version=true)
