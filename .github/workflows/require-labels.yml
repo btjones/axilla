@@ -9,6 +9,8 @@ on:
 jobs:
   label:
     name: Require PR Label major/minor/patch
+    # only run if the PR is not a draft
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: mheap/github-action-required-labels@v1.1.2
