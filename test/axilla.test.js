@@ -365,6 +365,7 @@ describe('axilla', () => {
       const packageVersion = process.env.npm_package_version
       expect(packageVersion.length).toBeGreaterThan(0)
       expect(packageVersion).toBeDefined()
+      expect(packageVersion).not.toBe('undefined')
       expect(axillaVersion).toBe(`Axilla version: v${packageVersion}`)
     })
 
