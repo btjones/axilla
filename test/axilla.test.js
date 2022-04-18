@@ -360,6 +360,8 @@ describe('axilla', () => {
 
   describe('version', () => {
 
+    console.log('process.env.IS_DEV', process.env.IS_DEV)
+
     it('getAxillaVersion returns formatted version info that matches the package.json version', async () => {
       const axillaVersion = test.getAxillaVersion()
       const packageVersion = process.env.npm_package_version
@@ -369,20 +371,32 @@ describe('axilla', () => {
 
     // we currently use an older version of pixlet for our github workflow
     // the old version of pixlet does not support the "version" param
-    // if we upgrade to a newer version of pixlet for the github workflow, we can write this test
-    it.todo('getPixletVersion returns formatted version info')
+    // if we upgrade pixlet for the github workflow, we can run these there
+    if (process.env.IS_DEV) {
 
-    it('returns version info when the "version" param is "true"', async () => {
-      const axillaVersion = test.getAxillaVersion()
-      await lambdaTester(handler)
-        .event(getEvent({ version: 'true' }))
-        .expectResolve((result) => {
-          expect(result.statusCode).toEqual(200)
-          expect(result.headers['content-type']).toEqual('text/plain')
-          expect(result.body.indexOf(axillaVersion)).toBeGreaterThan(-1)
-          // TODO: check pixlet version when/if we upgrade pixlet for our github workflow
-        })
-    })
+      it('getPixletVersion returns formatted version info', async () => {
+        const pixletVersion = await test.getPixletVersion()
+        expect(pixletVersion.length).toBeGreaterThan(0)
+      })
+
+      it('returns version info when the "version" param is "true"', async () => {
+        const axillaVersion = test.getAxillaVersion()
+        const pixletVersion = await test.getPixletVersion()
+        await lambdaTester(handler)
+          .event(getEvent({ version: 'true' }))
+          .expectResolve((result) => {
+            expect(result.statusCode).toEqual(200)
+            expect(result.headers['content-type']).toEqual('text/plain')
+            expect(result.body).toBe(`${axillaVersion} / ${pixletVersion}`)
+          })
+      })
+
+    } else {
+
+      it.todo('getPixletVersion returns formatted version info (requires pixlet update)')
+      it.todo('returns version info when the "version" param is "true" (requires pixlet update)')
+
+    }
 
   })
 

@@ -37,10 +37,17 @@ const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
 const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
+// executes pixlet with the given arguments
+const executePixlet = async (args) => {
+  const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
+  const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
+  return execFile(command, args, opts)
+}
+
 // helper functions
 const getOutputPath = (format) => path.join(TMP_PATH, `output.${format}`)
 const getAxillaVersion = () => `Axilla version: v${process.env.npm_package_version}`
-const getPixletVersion = async (command, opts) => (await execFile(command, ['version'], opts)).stdout
+const getPixletVersion = async () => (await executePixlet(['version'])).stdout
 
 exports.handler = async (event) => {
   // query params
@@ -52,8 +59,6 @@ exports.handler = async (event) => {
   const isVersionRequest = params.version === 'true'
 
   // setup pixlet
-  const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
-  const opts = LD_LIBRARY_PATH ? { env: { LD_LIBRARY_PATH } } : undefined
   const outputPath = getOutputPath(format)
   const args = ['render', appletPath, `--output=${outputPath}`]
   if (format === FORMATS.GIF) {
@@ -64,7 +69,7 @@ exports.handler = async (event) => {
   if (isVersionRequest) {
     try {
       const axillaVersion = getAxillaVersion()
-      const pixletVersion = await getPixletVersion(command, opts)
+      const pixletVersion = await getPixletVersion()
       return {
         statusCode: 200,
         headers: { 'content-type': 'text/plain' },
@@ -112,7 +117,7 @@ exports.handler = async (event) => {
 
   // run pixlet
   try {
-    await execFile(command, args, opts)
+    await executePixlet(args)
   } catch (error) {
     const appletMessage = !!appletUrl ? 'Ensure the provided applet is valid.' : ''
     return {
@@ -191,7 +196,9 @@ exports.handler = async (event) => {
 
 // for use with unit tests
 exports.test = {
+  executePixlet,
   getAxillaVersion,
+  getPixletVersion,
   getOutputPath,
   INPUT_APPLET_PATH,
 }
