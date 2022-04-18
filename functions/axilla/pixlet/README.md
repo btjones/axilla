@@ -2,7 +2,7 @@
 
 ## `pixlet-aws`
 
-Version: 0.17.0 (commit: [aaf1fd4](https://github.com/tidbyt/pixlet/commit/aaf1fd45e6ff83d1e590b82787090e7b6c3f5d3d))
+Version: 0.17.2 (commit: [2fd1466](https://github.com/tidbyt/pixlet/commit/2fd1466d2ca6a4c9757a1d6b3c9edbf7989a24bd))
 
 `pixlet-aws` is [built from source](https://github.com/tidbyt/pixlet/blob/2eaa1e34257b954a778a7878e21d9837e3befb52/BUILD.md) using an Amazon EC2 instance.
 
