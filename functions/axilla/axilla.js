@@ -8,8 +8,7 @@ const RESERVERD_PARAMS = [
   'format',
   'output',
   'applet',
-  'axilla_version',
-  'pixlet_version',
+  'version',
 ]
 
 const FORMATS = {
@@ -38,7 +37,10 @@ const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
 const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
+// helper functions
 const getOutputPath = (format) => path.join(TMP_PATH, `output.${format}`)
+const getAxillaVersion = () => `Axilla version: v${process.env.npm_package_version}`
+const getPixletVersion = async (command, opts) => (await execFile(command, ['version'], opts)).stdout
 
 exports.handler = async (event) => {
   // query params
@@ -47,17 +49,7 @@ exports.handler = async (event) => {
   const appletPath = appletUrl ? INPUT_APPLET_PATH : DEFAULT_APPLET_PATH
   const format = (params.format && FORMATS[params.format.toUpperCase()]) || FORMATS.WEBP
   const output = (params.output && OUTPUTS[params.output.toUpperCase()]) || OUTPUTS.HTML
-  const showAxillaVersion = params.axilla_version === 'true'
-  const showPixletVersion = params.pixlet_version === 'true'
-  console.log('params', params) // eslint-disable-line no-console
-
-  // return the axilla version when `axilla_version` param is true
-  if (showAxillaVersion) {
-    return {
-      statusCode: 200,
-      body: `Axilla version: v${process.env.npm_package_version}`,
-    }
-  }
+  const isVersionRequest = params.version === 'true'
 
   // setup pixlet
   const command = PIXLET_BINARY_PATH ? path.join(PIXLET_BINARY_PATH, PIXLET_BINARY) : PIXLET_BINARY
@@ -68,18 +60,20 @@ exports.handler = async (event) => {
     args.push('--gif=true')
   }
 
-  // return the pixlet version when `pixlet_version` param is true
-  if (showPixletVersion) {
+  // return the axilla and pixlet versions when the `version` param is true
+  if (isVersionRequest) {
     try {
-      const version = await execFile(command, ['version'], opts)
+      const axillaVersion = getAxillaVersion()
+      const pixletVersion = await getPixletVersion(command, opts)
       return {
         statusCode: 200,
-        body: version.stdout,
+        headers: { 'content-type': 'text/plain' },
+        body: `${axillaVersion} / ${pixletVersion}`,
       }
     } catch (error) {
       return {
         statusCode: 500,
-        body: `Error: Could not get pixlet version. ${error.message}`,
+        body: `Error: Could not get version info. ${error.message}`,
       }
     }
   }
@@ -197,6 +191,7 @@ exports.handler = async (event) => {
 
 // for use with unit tests
 exports.test = {
+  getAxillaVersion,
   getOutputPath,
   INPUT_APPLET_PATH,
 }

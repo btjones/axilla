@@ -18,12 +18,11 @@ _note: all query parameters are optional_
 
 ### Special Parameters
 
-_note: when these are present, other params are ignored and an applet is not executed_
+_note: when present, other params are ignored and an applet is not executed_
 
-| Parameter      | Default     | Description |
-|----------------|-------------|-------------|
-| axilla_version | `undefined` | When `true` returns the Axilla version |
-| pixlet_version | `undefined` | When `true` returns the Pixlet version |
+| Parameter | Default     | Description |
+|-----------|-------------|-------------|
+| version   | `undefined` | When `true` returns Axilla and Pixlet version information as plain text. |
 
 ## Applet Query Parameters
 
