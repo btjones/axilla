@@ -360,15 +360,6 @@ describe('axilla', () => {
 
   describe('version', () => {
 
-    it('getAxillaVersion returns formatted version info that matches the package.json version', async () => {
-      const axillaVersion = test.getAxillaVersion()
-      const packageVersion = process.env.npm_package_version
-      expect(packageVersion.length).toBeGreaterThan(0)
-      expect(packageVersion).toBeDefined()
-      expect(packageVersion).not.toBe('undefined')
-      expect(axillaVersion).toBe(`Axilla version: v${packageVersion}`)
-    })
-
     // we currently use an older version of pixlet for our github workflow
     // the old version of pixlet does not support the "version" param
     // if we upgrade pixlet for the github workflow, we can run these there
@@ -381,14 +372,12 @@ describe('axilla', () => {
       })
 
       it('returns version info when the "version" param is "true"', async () => {
-        const axillaVersion = test.getAxillaVersion()
-        const pixletVersion = await test.getPixletVersion()
         await lambdaTester(handler)
           .event(getEvent({ version: 'true' }))
           .expectResolve((result) => {
             expect(result.statusCode).toEqual(200)
             expect(result.headers['content-type']).toEqual('text/plain')
-            expect(result.body).toBe(`${axillaVersion} / ${pixletVersion}`)
+            expect(result.body.indexOf('Pixlet version:')).toBeGreaterThan(-1)
           })
       })
 

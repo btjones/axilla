@@ -46,7 +46,6 @@ const executePixlet = async (args) => {
 
 // helper functions
 const getOutputPath = (format) => path.join(TMP_PATH, `output.${format}`)
-const getAxillaVersion = () => `Axilla version: v${process.env.npm_package_version}`
 const getPixletVersion = async () => (await executePixlet(['version'])).stdout
 
 exports.handler = async (event) => {
@@ -65,15 +64,14 @@ exports.handler = async (event) => {
     args.push('--gif=true')
   }
 
-  // return the axilla and pixlet versions when the `version` param is true
+  // return the pixlet version when the `version` param is true
   if (isVersionRequest) {
     try {
-      const axillaVersion = getAxillaVersion()
       const pixletVersion = await getPixletVersion()
       return {
         statusCode: 200,
         headers: { 'content-type': 'text/plain' },
-        body: `${axillaVersion} / ${pixletVersion}`,
+        body: pixletVersion,
       }
     } catch (error) {
       return {
@@ -197,7 +195,6 @@ exports.handler = async (event) => {
 // for use with unit tests
 exports.test = {
   executePixlet,
-  getAxillaVersion,
   getPixletVersion,
   getOutputPath,
   INPUT_APPLET_PATH,
