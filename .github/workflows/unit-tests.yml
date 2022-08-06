@@ -18,6 +18,10 @@ jobs:
         run: sudo apt-get install -y libwebp-dev
       - name: Working directory check
         run: pwd
+      - name: Working directory list
+        run: ls
+      - name: Env variable check
+        run: echo "$PIXLET_BINARY_PATH$PIXLET_BINARY"
       - name: chmod pixlet binary
         run: sudo chmod +x "$PIXLET_BINARY_PATH$PIXLET_BINARY"
       - name: Install Dependencies
