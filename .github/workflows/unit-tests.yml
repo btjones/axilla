@@ -14,8 +14,14 @@ jobs:
       PIXLET_BINARY_PATH: ./functions/axilla/pixlet/
     steps:
       - uses: actions/checkout@v2
-      - name: Install libwebp-dev
-        run: sudo apt-get install -y libwebp-dev
+      - name: Check libwebp versions
+        run: apt-cache policy libwebp
+      - name: Check libwebp-dev versions
+        run: apt-cache policy libwebp-dev
+      # - name: Install libwebp-dev
+      #   run: sudo apt-get install -y libwebp-dev
+      - name: Install libwebp
+        run: sudo apt-get install -y libwebp
       - name: Working directory check
         run: pwd
       - name: Working directory list
