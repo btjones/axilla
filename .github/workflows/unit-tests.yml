@@ -18,6 +18,8 @@ jobs:
         run: apt-cache policy libwebp-dev
       - name: Install libwebp-dev
         run: sudo apt-get install -y libwebp-dev
+      - name: ldd check
+        run: ldd "$PIXLET_BINARY_PATH$PIXLET_BINARY"
       # - name: ldconfig test
       #   run: sudo ldconfig
       # - name: Working directory check
