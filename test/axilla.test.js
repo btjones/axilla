@@ -63,6 +63,7 @@ describe('axilla', () => {
         .expectResolve((result) => {
           const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
+          expect(result.error).not.toBeDefined()
           expect(result.headers['content-type']).toEqual('text/html')
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
