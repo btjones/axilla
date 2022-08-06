@@ -14,28 +14,8 @@ jobs:
       PIXLET_BINARY_PATH: ./functions/axilla/pixlet/
     steps:
       - uses: actions/checkout@v2
-      # - name: check libwebp before
-      #   run: apt list libwebp
-      # - name: Check libwebp-dev versions
-      #   run: apt-cache policy libwebp-dev
-      # - name: Install libwebp-dev
-      #   run: sudo apt-get install -y libwebp-dev
-      # - name: check libwebp after
-      #   run: apt list libwebp
-      - name: symlink libwebp.so.6
+      - name: Symlink libwebp.so.6
         run: sudo ln -s /lib/x86_64-linux-gnu/libwebp.so.7 /lib/x86_64-linux-gnu/libwebp.so.6
-      - name: ldd check
-        run: ldd "$PIXLET_BINARY_PATH$PIXLET_BINARY"
-      # - name: ldconfig test
-      #   run: sudo ldconfig
-      # - name: Working directory check
-      #   run: pwd
-      # - name: Working directory list
-      #   run: ls
-      # - name: Env variable check
-      #   run: echo "$PIXLET_BINARY_PATH$PIXLET_BINARY"
-      # - name: chmod pixlet binary
-      #   run: sudo chmod +x "$PIXLET_BINARY_PATH$PIXLET_BINARY"
       - name: Install Dependencies
         run: npm install
       - name: Run Tests
