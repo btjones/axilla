@@ -23,7 +23,7 @@ jobs:
       # - name: check libwebp after
       #   run: apt list libwebp
       - name: symlink libwebp.so.6
-        run: ln -s /lib/x86_64-linux-gnu/libwebp.so.7 /lib/x86_64-linux-gnu/libwebp.so.6
+        run: sudo ln -s /lib/x86_64-linux-gnu/libwebp.so.7 /lib/x86_64-linux-gnu/libwebp.so.6
       - name: ldd check
         run: ldd "$PIXLET_BINARY_PATH$PIXLET_BINARY"
       # - name: ldconfig test
