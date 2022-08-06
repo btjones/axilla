@@ -8,7 +8,7 @@ on:
 jobs:
   tests:
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       PIXLET_BINARY: pixlet-github
       PIXLET_BINARY_PATH: ./functions/axilla/pixlet/
