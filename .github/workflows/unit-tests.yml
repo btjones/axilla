@@ -22,8 +22,8 @@ jobs:
       #   run: sudo apt-get install -y libwebp-dev
       # - name: check libwebp after
       #   run: apt list libwebp
-      - name: alias libwebp.so.6
-        run: alias libwebp.so.6="libwebp.so.7"
+      - name: symlink libwebp.so.6
+        run: ln -s /lib/x86_64-linux-gnu/libwebp.so.7 /lib/x86_64-linux-gnu/libwebp.so.6
       - name: ldd check
         run: ldd "$PIXLET_BINARY_PATH$PIXLET_BINARY"
       # - name: ldconfig test
