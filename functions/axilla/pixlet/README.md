@@ -8,9 +8,9 @@ Version: ~0.17.15 (commit: [c53e5a4](https://github.com/tidbyt/pixlet/commit/c53
 
 ## `pixlet-github`
 
-Version: 0.8.2 ([official release](https://github.com/tidbyt/pixlet/releases))
+Version: 0.17.15 ([official release](https://github.com/tidbyt/pixlet/releases))
 
-`pixlet-github` uses an [official pixlet linux_amd64 release](https://github.com/tidbyt/pixlet/releases). Note: Versions newer than 0.8.2 fail to execute within Github Actions (Ubuntu 20.04 aka `ubuntu-latest`). Axilla unit tests currently don't require a newer version of `pixlet` so this is ok for now.
+`pixlet-github` uses an [official pixlet linux_amd64 release](https://github.com/tidbyt/pixlet/releases).
 
 ## Check Current Version
 
