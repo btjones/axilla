@@ -16,6 +16,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install libwebp-dev
         run: sudo apt-get install -y libwebp-dev
+      - name: Working directory check
+        run: pwd
+      - name: chmod pixlet binary
+        run: sudo chmod +x "$PIXLET_BINARY_PATH$PIXLET_BINARY"
       - name: Install Dependencies
         run: npm install
       - name: Run Tests
