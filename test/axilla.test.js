@@ -61,8 +61,8 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent())
         .expectResolve((result) => {
-          expect(result.statusCode).toEqual(200)
           expect(result.error).not.toBeDefined()
+          expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
 
           const image = getImageInfo(result.body)
