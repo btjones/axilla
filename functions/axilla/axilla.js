@@ -121,6 +121,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 500,
       body: `Error: Failed to generate image with Pixlet. ${appletMessage} ${error.message}`,
+      error: error.message,
     }
   }
 
