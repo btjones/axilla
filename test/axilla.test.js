@@ -61,10 +61,11 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent())
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.error).not.toBeDefined()
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -78,9 +79,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ format: 'webp' }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -90,9 +92,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ format: 'gif' }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('gif')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -102,9 +105,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ format: '🌶' }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -118,9 +122,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ output: 'html' }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -150,9 +155,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ output: '🧀' }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -167,9 +173,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ applet: APPLET_TEST_PATH }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(APPLET_BASE64_WEBP)
         })
@@ -183,9 +190,10 @@ describe('axilla', () => {
           greeting: '¡hola!',
         }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(APPLET_BASE64_WEBP_WITH_PARAM)
         })
@@ -199,9 +207,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ text: 'wowsers' }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -211,9 +220,10 @@ describe('axilla', () => {
       await lambdaTester(handler)
         .event(getEvent({ '--hmm': 'nope' }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('webp')
           expect(image.base64).toMatch(REGEX_BASE64)
         })
@@ -264,9 +274,10 @@ describe('axilla', () => {
           applet: APPLET_TEST_PATH,
         }))
         .expectResolve((result) => {
-          const image = getImageInfo(result.body)
           expect(result.statusCode).toEqual(200)
           expect(result.headers['content-type']).toEqual('text/html')
+
+          const image = getImageInfo(result.body)
           expect(image.format).toEqual('gif')
           expect(image.base64).toMatch(APPLET_BASE64_GIF)
         })
