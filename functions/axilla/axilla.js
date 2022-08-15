@@ -22,6 +22,10 @@ const OUTPUTS = {
   BASE64: 'base64',
 }
 
+const CSS_CLASSES = {
+  PIXETLATE: 'pixelate',
+}
+
 // environment variables
 // these are dynamically generated using a plugin so destructuring cannot be used
 /* eslint-disable prefer-destructuring */
@@ -55,6 +59,7 @@ exports.handler = async (event) => {
   const appletPath = appletUrl ? INPUT_APPLET_PATH : DEFAULT_APPLET_PATH
   const format = (params.format && FORMATS[params.format.toUpperCase()]) || FORMATS.WEBP
   const output = (params.output && OUTPUTS[params.output.toUpperCase()]) || OUTPUTS.HTML
+  const cssClass = params.pixelate === 'false' ? '' : CSS_CLASSES.PIXETLATE
   const isVersionRequest = params.version === 'true'
 
   // setup pixlet
@@ -172,9 +177,10 @@ exports.handler = async (event) => {
       let html
       try {
         html = await fs.readFile(HTML_TEMPLATE_PATH, 'utf8')
-        html = html.replace(/\{format\}|\{image\}/gi, (match) => {
+        html = html.replace(/\{format\}|\{image\}|\{class\}/gi, (match) => {
           if (match === '{format}') return format
           if (match === '{image}') return imageBase64
+          if (match === '{class}') return cssClass
           return match
         })
       } catch (error) {
