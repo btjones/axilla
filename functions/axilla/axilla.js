@@ -37,8 +37,7 @@ const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
 // static paths
 const TMP_PATH = '/tmp'
 const ASSETS_PATH = path.join(__dirname, 'assets')
-const STATIC_PATH = path.join(__dirname, '..', '..', 'static')
-const DEFAULT_APPLET_PATH = path.join(STATIC_PATH, 'default.star')
+const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
 const HTML_TEMPLATE_PATH = path.join(ASSETS_PATH, 'basic.html')
 
