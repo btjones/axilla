@@ -85,3 +85,7 @@ Run unit tests:
 Run unit tests and watch for changes:
 
     npm run test:watch
+
+## Pixlet
+
+This application includes binaries of the [Pixlet](https://github.com/tidbyt/pixlet) application which is covered under the [Apache License Version 2.0](PIXLET_LICENSE.txt).
