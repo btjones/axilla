@@ -51,9 +51,15 @@ The default Axilla applet accepts one parameter: `text`. Other applets can defin
 
 ### External Applets
 
+#### Without App Parameters
+
 - [`applet=https://raw.githubusercontent.com/tidbyt/pixlet/main/examples/hello_world.star`](https://axilla.netlify.app/?applet=https://raw.githubusercontent.com/tidbyt/pixlet/main/examples/hello_world.star)
 - [`applet=https://raw.githubusercontent.com/tidbyt/pixlet/main/examples/clock.star`](https://axilla.netlify.app/?applet=https://raw.githubusercontent.com/tidbyt/pixlet/main/examples/clock.star)
-- [`applet=https://raw.githubusercontent.com/tidbyt/pixlet/main/examples/quadrants.star`](https://axilla.netlify.app/?applet=https://raw.githubusercontent.com/tidbyt/pixlet/main/examples/quadrants.star)
+
+#### With App Parameters
+
+- [`applet=https://raw.githubusercontent.com/btjones/community/main/apps/flags/flags.star&show_name=true&country_code=us`](https://axilla.netlify.app/?applet=https://raw.githubusercontent.com/btjones/community/main/apps/flags/flags.star&show_name=true&country_code=us)
+- [`applet=https://raw.githubusercontent.com/btjones/community/main/apps/randomslackmoji/random_slackmoji.star&query=dance`](https://axilla.netlify.app/?applet=https://raw.githubusercontent.com/btjones/community/main/apps/randomslackmoji/random_slackmoji.star&query=dance)
 
 ## Forking / Netlify Deployment
 
