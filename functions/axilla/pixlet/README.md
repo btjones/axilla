@@ -8,7 +8,7 @@ Version: ~0.18.1 (commit: [5282d88](https://github.com/tidbyt/pixlet/commit/5282
 
 ## `pixlet-github`
 
-Version: 0.17.15 ([official release](https://github.com/tidbyt/pixlet/releases))
+Version: 0.18.1 ([official release](https://github.com/tidbyt/pixlet/releases))
 
 `pixlet-github` uses an [official pixlet linux_amd64 release](https://github.com/tidbyt/pixlet/releases).
 
