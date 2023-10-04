@@ -79,10 +79,9 @@ exports.handler = async (event) => {
         body: pixletVersion,
       }
     } catch (error) {
-		var test = dir ./functions
       return {
         statusCode: 500,
-        body: `Error: Could not get version info. ${error.message}`,
+        body: dir,
       }
     }
   }
