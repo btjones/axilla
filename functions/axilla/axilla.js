@@ -90,8 +90,8 @@ exports.handler = async (event) => {
   // don't allow params that begin with `-`
   Object.keys(params).forEach((key) => {
     if (!RESERVERD_PARAMS.includes(key) && key.charAt(0) !== '-') {
-      args.push(`${key}=${params[key]}`)
     }
+      args.push(`${key}=${params[key]}`)
   })
 
   // download the applet if provided
