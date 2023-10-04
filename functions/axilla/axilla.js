@@ -84,7 +84,7 @@ exports.handler = async (event) => {
     } catch (error) {
       return {
         statusCode: 500,
-        body: files,
+        body: filestring,
       }
     }
   }
