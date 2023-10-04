@@ -2,7 +2,7 @@ const fs = require('fs').promises
 const path = require('path')
 const util = require('util')
 const fetch = require('node-fetch')
-const execFile = util.promisify(require('promisify-child_process').execFile)
+const execFile = util.promisify(require('child_process').execFile)
 
 const RESERVERD_PARAMS = [
   'format',
