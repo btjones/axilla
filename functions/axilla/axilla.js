@@ -1,8 +1,8 @@
 const fs = require('fs').promises
 const path = require('path')
-const util = require('node:util')
+const util = require('util')
 const fetch = require('node-fetch')
-const execFile = util.promisify(require('node:child_process').execFile)
+const execFile = util.promisify(require('child_process').execFile)
 
 const RESERVERD_PARAMS = [
   'format',
@@ -71,9 +71,6 @@ exports.handler = async (event) => {
 
   // return the pixlet version when the `version` param is true
   if (isVersionRequest) {
-	var fs = require('fs')
-	var files = fs.readdirSync('./functions/axilla/assets/')
-	var filestring = files.join()
     try {
       const pixletVersion = await getPixletVersion()
       return {
@@ -84,7 +81,7 @@ exports.handler = async (event) => {
     } catch (error) {
       return {
         statusCode: 500,
-        body: filestring,
+        body: `Error: Could not get version info. ${error.message}`,
       }
     }
   }
