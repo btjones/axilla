@@ -21,8 +21,7 @@
   },
   "homepage": "https://github.com/btjones/axilla",
   "dependencies": {
-    "node-fetch": "^2.6.1",
-	"promisify": "^0.0.3"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
