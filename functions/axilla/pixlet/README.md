@@ -2,13 +2,13 @@
 
 ## `pixlet-aws`
 
-Version: ~0.18.1 (commit: [5282d88](https://github.com/tidbyt/pixlet/commit/5282d88a7127408329b549018cadb3d1d41c2209))
+Version: ~0.28.4 (commit: [c0ae433](https://github.com/tidbyt/pixlet/commit/c0ae4335dec523c04a6dbd745d82c16f2da21b53))
 
 `pixlet-aws` is [built from source](https://github.com/tidbyt/pixlet/blob/main/docs/BUILD.md) using an Amazon EC2 instance.
 
 ## `pixlet-github`
 
-Version: 0.18.1 ([official release](https://github.com/tidbyt/pixlet/releases))
+Version: 0.28.4 ([official release](https://github.com/tidbyt/pixlet/releases))
 
 `pixlet-github` uses an [official pixlet linux_amd64 release](https://github.com/tidbyt/pixlet/releases).
 
