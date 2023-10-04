@@ -81,7 +81,8 @@ exports.handler = async (event) => {
     } catch (error) {
       return {
         statusCode: 500,
-        body: `Error: Could not get version info. ${error.message}`,
+		body: error
+        //body: `Error: Could not get version info. ${error.message}`,
       }
     }
   }
