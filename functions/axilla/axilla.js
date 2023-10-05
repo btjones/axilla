@@ -148,7 +148,7 @@ exports.handler = async (event) => {
   } catch (error) {
     return {
       statusCode: 500,
-      body: `Error: Could not read output file. ${error.message}`,
+      body: `Error: Could not read output file. ${error.message} ${outputPath}`,
     }
   }
 
