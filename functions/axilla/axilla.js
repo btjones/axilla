@@ -145,6 +145,7 @@ exports.handler = async (event) => {
   let imageBase64
   try {
     imageBase64 = await fs.readFileSync(outputPath, 'base64')
+	console.log(path.resolve(outputpath))
   } catch (error) {
     return {
       statusCode: 500,
