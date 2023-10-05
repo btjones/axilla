@@ -72,7 +72,7 @@ exports.handler = async (event) => {
   // return the pixlet version when the `version` param is true
   if (isVersionRequest) {
 	  var fs = require('fs')
-	  var files = fs.readdirSync('/functions/axilla')
+	  var files = fs.readdirSync('./')
     try {
       const pixletVersion = await getPixletVersion()
       return {
