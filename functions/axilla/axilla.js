@@ -1,4 +1,6 @@
-const fs = require('fs')
+var Promise = require('bluebird');
+var fs = Promise.promisifyAll(require('fs'));
+//const fs = require('fs')
 const path = require('path')
 const util = require('util')
 const fetch = require('node-fetch')
@@ -142,7 +144,7 @@ exports.handler = async (event) => {
   }
 
   // base64 encode the generated image
-  const imageBase64 = await fs.readFile(outputPath, 'base64', function(err, data){
+  const imageBase64 = await fs.readFileAsync(outputPath, 'base64', function(err, data){
 	  if (err) {
     return {
       statusCode: 500,
