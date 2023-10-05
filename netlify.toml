@@ -1,17 +1,17 @@
 [context.production.environment]
-  PIXLET_BINARY = "pixlet-new"
-  PIXLET_BINARY_PATH = "./functions/axilla"
-  LD_LIBRARY_PATH = "./functions/axilla"
+  PIXLET_BINARY = "pixlet-aws"
+  PIXLET_BINARY_PATH = "./functions/axilla/pixlet/"
+  LD_LIBRARY_PATH = "./functions/axilla/lib"
 
 [context.branch-deploy.environment]
   PIXLET_BINARY = "pixlet-aws"
-  PIXLET_BINARY_PATH = "./functions/axilla"
-  LD_LIBRARY_PATH = "./functions/axilla"
+  PIXLET_BINARY_PATH = "./functions/axilla/pixlet/"
+  LD_LIBRARY_PATH = "./functions/axilla/lib"
 
 [context.deploy-preview.environment]
   PIXLET_BINARY = "pixlet-aws"
-  PIXLET_BINARY_PATH = "./functions/axilla"
-  LD_LIBRARY_PATH = "./functions/axilla"
+  PIXLET_BINARY_PATH = "./functions/axilla/pixlet/"
+  LD_LIBRARY_PATH = "./functions/axilla/lib"
 
 [[plugins]]
   package = "netlify-plugin-inline-functions-env"
