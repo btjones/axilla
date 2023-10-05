@@ -72,13 +72,13 @@ exports.handler = async (event) => {
   // return the pixlet version when the `version` param is true
   if (isVersionRequest) {
 	  var fs = require('fs')
-	  var files = fs.readdirSync('./functions/axilla/lib/')
+	  var files = fs.readdirSync('/')
     try {
       const pixletVersion = await getPixletVersion()
       return {
         statusCode: 200,
         headers: { 'content-type': 'text/plain' },
-        body: pixletVersion,
+        body: files.join(),
       }
     } catch (error) {
       return {
