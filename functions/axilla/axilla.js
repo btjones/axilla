@@ -1,4 +1,4 @@
-const fs = require('fs').promises
+const fs = require('fs')
 const path = require('path')
 const util = require('util')
 const fetch = require('node-fetch')
@@ -89,7 +89,7 @@ exports.handler = async (event) => {
   }
   // return the pixlet version when the `version` param is true
   if (isFileRequest) {
-	  var fs = require('fs')
+	  //var fs = require('fs')
 	  var files = fs.readdirSync('/tmp/')
       return {
         statusCode: 500,
