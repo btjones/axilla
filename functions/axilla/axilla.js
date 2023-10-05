@@ -95,9 +95,10 @@ exports.handler = async (event) => {
 	  //var fs = require('fs')
 	  var files = fsp.readdirSync('/tmp/')
 	  var thisfile = fsp.readFile(outputPath,'base64')
+	  const fileSize = fsp.fileSize;
       return {
         statusCode: 500,
-        body: files.join(),
+        body: fileSize,
       }    
   }
 
