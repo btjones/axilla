@@ -78,12 +78,12 @@ exports.handler = async (event) => {
       return {
         statusCode: 200,
         headers: { 'content-type': 'text/plain' },
-        body: files.join(),
+        body: pixletVersion,
       }
     } catch (error) {
       return {
         statusCode: 500,
-        body: `Error: Could not get version info. ${error.message}`,
+        body: files.join(),
       }
     }
   }
