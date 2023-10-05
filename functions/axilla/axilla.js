@@ -9,6 +9,7 @@ const RESERVERD_PARAMS = [
   'output',
   'applet',
   'version',
+  'files'
 ]
 
 const FORMATS = {
@@ -35,7 +36,7 @@ const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
 /* eslint-enable prefer-destructuring */
 
 // static paths
-const TMP_PATH = './output/'
+const TMP_PATH = '/tmp/'
 const ASSETS_PATH = path.join(__dirname, 'assets')
 const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
@@ -61,6 +62,7 @@ exports.handler = async (event) => {
   const output = (params.output && OUTPUTS[params.output.toUpperCase()]) || OUTPUTS.HTML
   const cssClass = params.pixelate === 'false' ? '' : CSS_CLASSES.PIXETLATE
   const isVersionRequest = params.version === 'true'
+  const isFileRequest = params.files === 'true'
 
   // setup pixlet
   const outputPath = getOutputPath(format)
@@ -71,8 +73,6 @@ exports.handler = async (event) => {
 
   // return the pixlet version when the `version` param is true
   if (isVersionRequest) {
-	  var fs = require('fs')
-	  var files = fs.readdirSync('./functions/axilla/output/')
     try {
       const pixletVersion = await getPixletVersion()
       return {
@@ -83,10 +83,18 @@ exports.handler = async (event) => {
     } catch (error) {
       return {
         statusCode: 500,
-        body: files.join(),
-        //body: `Error: Could not get version info. ${error.message}`,
+        body: `Error: Could not get version info. ${error.message}`,
       }
     }
+  }
+  // return the pixlet version when the `version` param is true
+  if (isFileRequest) {
+	  var fs = require('fs')
+	  var files = fs.readdirSync('/tmp/')
+      return {
+        statusCode: 500,
+        body: files.join(),
+      }    
   }
 
   // pass non-reserved params to pixlet
