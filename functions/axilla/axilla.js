@@ -83,7 +83,7 @@ exports.handler = async (event) => {
     } catch (error) {
       return {
         statusCode: 500,
-        body: files.join(),
+        body: `Error: Could not get version info. ${error.message}`,
       }
     }
   }
@@ -92,8 +92,8 @@ exports.handler = async (event) => {
   // don't allow params that begin with `-`
   Object.keys(params).forEach((key) => {
     if (!RESERVERD_PARAMS.includes(key) && key.charAt(0) !== '-') {
-    }
       args.push(`${key}=${params[key]}`)
+    }
   })
 
   // download the applet if provided
