@@ -8,8 +8,7 @@ const RESERVERD_PARAMS = [
   'format',
   'output',
   'applet',
-  'version',
-  'files'
+  'version'
 ]
 
 const FORMATS = {
@@ -62,7 +61,6 @@ exports.handler = async (event) => {
   const output = (params.output && OUTPUTS[params.output.toUpperCase()]) || OUTPUTS.HTML
   const cssClass = params.pixelate === 'false' ? '' : CSS_CLASSES.PIXETLATE
   const isVersionRequest = params.version === 'true'
-  const isFileRequest = params.files === 'true'
 
   // setup pixlet
   const outputPath = getOutputPath(format)
@@ -86,15 +84,6 @@ exports.handler = async (event) => {
         body: `Error: Could not get version info. ${error.message}`,
       }
     }
-  }
-  // return the pixlet version when the `version` param is true
-  if (isFileRequest) {
-	  //var fs = require('fs')
-	  var files = fs.readdirSync('/tmp/')
-      return {
-        statusCode: 500,
-        body: files.join(),
-      }    
   }
 
   // pass non-reserved params to pixlet
