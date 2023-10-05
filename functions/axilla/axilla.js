@@ -142,15 +142,13 @@ exports.handler = async (event) => {
   }
 
   // base64 encode the generated image
-  let imageBase64
-  try {
-    imageBase64 = await fs.readFileSync(outputPath, 'base64')
-	console.log(path.resolve(outputpath))
-  } catch (error) {
+  const imageBase64 = await fs.readFile(outputPath, 'base64', function(err, data){
+	  if (err) {
     return {
       statusCode: 500,
       body: `Error: Could not read output file. ${error.message} ${outputPath}`,
     }
+  }
   }
 
   // delete the temp input and output files
