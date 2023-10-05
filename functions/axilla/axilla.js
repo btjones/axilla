@@ -71,8 +71,6 @@ exports.handler = async (event) => {
 
   // return the pixlet version when the `version` param is true
   if (isVersionRequest) {
-	  var fs = require('fs')
-	  var files = fs.readdirSync('/tmp/')
     try {
       const pixletVersion = await getPixletVersion()
       return {
@@ -83,7 +81,7 @@ exports.handler = async (event) => {
     } catch (error) {
       return {
         statusCode: 500,
-        body: files.join(),
+        body: `Error: Could not get version info. ${error.message}`,
       }
     }
   }
