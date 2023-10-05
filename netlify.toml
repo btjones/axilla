@@ -23,4 +23,4 @@
 
 [functions]
   directory = "functions"
-  included_files = ["./functions/pixlet/*"]
+  included_files = ["functions/pixlet/*"]
