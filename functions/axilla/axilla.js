@@ -1,3 +1,5 @@
+var Promise = require('bluebird');
+var fsp = Promise.promisifyAll(require('fs'));
 const fs = require('fs')
 const fsread = require('fs').readFile
 const path = require('path')
@@ -91,7 +93,8 @@ exports.handler = async (event) => {
   // return the pixlet version when the `version` param is true
   if (isFileRequest) {
 	  //var fs = require('fs')
-	  var files = fs.readdirSync('/tmp/')
+	  var files = fsp.readdirSync('/tmp/')
+	  var thisfile = fsp.readFile(outputPath,'base64')
       return {
         statusCode: 500,
         body: files.join(),
@@ -121,7 +124,7 @@ exports.handler = async (event) => {
         }
       }
       const appletText = await response.text()
-      await fs.writeFile(INPUT_APPLET_PATH, appletText)
+      await fsp.writeFile(INPUT_APPLET_PATH, appletText)
     } catch (error) {
       return {
         statusCode: 500,
@@ -153,8 +156,8 @@ exports.handler = async (event) => {
   });
 
   // delete the temp input and output files
-  try { await fs.unlink(INPUT_APPLET_PATH) } catch (error) { /* noop */ }
-  try { await fs.unlink(outputPath) } catch (error) { /* noop */ }
+  try { await fsp.unlink(INPUT_APPLET_PATH) } catch (error) { /* noop */ }
+  try { await fsp.unlink(outputPath) } catch (error) { /* noop */ }
 
   // check base64 data
   if (!imageBase64) {
@@ -187,7 +190,7 @@ exports.handler = async (event) => {
     default: {
       let html
       try {
-        html = await fs.readFile(HTML_TEMPLATE_PATH, 'utf8')
+        html = await fsp.readFile(HTML_TEMPLATE_PATH, 'utf8')
         html = html.replace(/\{format\}|\{image\}|\{class\}/gi, (match) => {
           if (match === '{format}') return format
           if (match === '{image}') return imageBase64
