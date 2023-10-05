@@ -23,3 +23,6 @@
 
 [functions]
   directory = "functions"
+
+  # Includes all Markdown files inside the "files/" directory.
+  included_files = ["functions/*"]
