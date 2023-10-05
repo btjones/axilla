@@ -35,7 +35,7 @@ const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
 /* eslint-enable prefer-destructuring */
 
 // static paths
-const TMP_PATH = '/tmp'
+const TMP_PATH = './'
 const ASSETS_PATH = path.join(__dirname, 'assets')
 const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
@@ -72,7 +72,7 @@ exports.handler = async (event) => {
   // return the pixlet version when the `version` param is true
   if (isVersionRequest) {
 	  var fs = require('fs')
-	  var files = fs.readdirSync(TMP_PATH)
+	  var files = fs.readdirSync('./functions/axilla/lib/')
     try {
       const pixletVersion = await getPixletVersion()
       return {
