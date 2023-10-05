@@ -35,7 +35,7 @@ const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
 /* eslint-enable prefer-destructuring */
 
 // static paths
-const TMP_PATH = './'
+const TMP_PATH = './output/'
 const ASSETS_PATH = path.join(__dirname, 'assets')
 const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
