@@ -149,7 +149,7 @@ exports.handler = async (event) => {
       body: `Error: Could not read output file. ${error.message} ${outputPath}`,
     }
   }
-  }
+  });
 
   // delete the temp input and output files
   try { await fs.unlink(INPUT_APPLET_PATH) } catch (error) { /* noop */ }
