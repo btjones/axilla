@@ -8,7 +8,7 @@ const RESERVERD_PARAMS = [
   'format',
   'output',
   'applet',
-  'version'
+  'version',
 ]
 
 const FORMATS = {
@@ -131,14 +131,15 @@ exports.handler = async (event) => {
   }
 
   // base64 encode the generated image
-  const imageBase64 = await fs.readFile(outputPath, 'base64', function(err, data){
-	  if (err) {
+  let imageBase64
+  try {
+    imageBase64 = await fs.readFile(outputPath, 'base64')
+  } catch (error) {
     return {
       statusCode: 500,
       body: `Error: Could not read output file. ${error.message} ${outputPath}`,
     }
   }
-  });
 
   // delete the temp input and output files
   try { await fs.unlink(INPUT_APPLET_PATH) } catch (error) { /* noop */ }
