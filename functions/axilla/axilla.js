@@ -8,7 +8,7 @@ const RESERVERD_PARAMS = [
   'format',
   'output',
   'applet',
-  'version',
+  'version'
 ]
 
 const FORMATS = {
@@ -35,7 +35,7 @@ const LD_LIBRARY_PATH = process.env.LD_LIBRARY_PATH
 /* eslint-enable prefer-destructuring */
 
 // static paths
-const TMP_PATH = '/tmp'
+const TMP_PATH = '/tmp/'
 const ASSETS_PATH = path.join(__dirname, 'assets')
 const DEFAULT_APPLET_PATH = path.join(ASSETS_PATH, 'default.star')
 const INPUT_APPLET_PATH = path.join(TMP_PATH, 'input.star')
@@ -131,15 +131,14 @@ exports.handler = async (event) => {
   }
 
   // base64 encode the generated image
-  let imageBase64
-  try {
-    imageBase64 = await fs.readFile(outputPath, 'base64')
-  } catch (error) {
+  const imageBase64 = await fs.readFile(outputPath, 'base64', function(err, data){
+	  if (err) {
     return {
       statusCode: 500,
-      body: `Error: Could not read output file. ${error.message}`,
+      body: `Error: Could not read output file. ${error.message} ${outputPath}`,
     }
   }
+  });
 
   // delete the temp input and output files
   try { await fs.unlink(INPUT_APPLET_PATH) } catch (error) { /* noop */ }
